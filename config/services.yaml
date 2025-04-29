@@ -22,3 +22,33 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    App\Domain\Specification\ScoreSpecification:
+        arguments:
+            - '%credit.score_threshold%'
+        tags: ['credit_specification']
+
+    App\Domain\Specification\IncomeSpecification:
+        arguments:
+            - '%credit.income_minimum%'
+        tags: ['credit_specification']
+
+    App\Domain\Specification\AgeSpecification:
+        arguments:
+            - '%credit.age_min%'
+            - '%credit.age_max%'
+        tags: ['credit_specification']
+
+    App\Domain\Specification\RegionSpecification:
+        arguments:
+            - '%credit.allowed_regions%'
+        tags: ['credit_specification']
+
+    App\Domain\Specification\PragueRandomDenialSpecification:
+        tags: ['credit_specification']
+
+
+    App\Domain\Service\CreditEligibilityService:
+        arguments:
+            $rules: !tagged credit_specification

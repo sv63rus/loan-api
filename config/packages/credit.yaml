@@ -1,0 +1,7 @@
+# config/packages/credit.yaml
+parameters:
+  credit.score_threshold:   500
+  credit.income_minimum:    1000
+  credit.age_min:           18
+  credit.age_max:           60
+  credit.allowed_regions:  ['PR','BR','OS']
