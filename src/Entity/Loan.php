@@ -1,17 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\LoanRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LoanRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['loan:read']],
-    denormalizationContext: ['groups' => ['loan:write']]
+    normalizationContext: [
+        'groups' => ['loan:read'],
+    ],
+    denormalizationContext: [
+        'groups' => ['loan:write'],
+    ]
 )]
 class Loan
 {
@@ -21,27 +26,27 @@ class Loan
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['loan:read','loan:write'])]
+    #[Groups(['loan:read', 'loan:write'])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups(['loan:read','loan:write'])]
+    #[Groups(['loan:read', 'loan:write'])]
     private ?int $amount = null;
 
     #[ORM\Column]
-    #[Groups(['loan:read','loan:write'])]
+    #[Groups(['loan:read', 'loan:write'])]
     private ?float $rate = null;
 
     #[ORM\Column]
-    #[Groups(['loan:read','loan:write'])]
+    #[Groups(['loan:read', 'loan:write'])]
     private ?\DateTimeImmutable $startDate = null;
 
     #[ORM\Column]
-    #[Groups(['loan:read','loan:write'])]
+    #[Groups(['loan:read', 'loan:write'])]
     private ?\DateTimeImmutable $endDate = null;
 
     #[ORM\Column]
-    #[Groups(['loan:read','loan:write'])]
+    #[Groups(['loan:read', 'loan:write'])]
     private ?bool $approved = null;
 
     #[ORM\ManyToOne(inversedBy: 'loans')]
@@ -53,19 +58,19 @@ class Loan
         string $name,
         int $amount,
         float $rate,
-        DateTimeImmutable $startDate,
-        DateTimeImmutable $endDate
+        \DateTimeImmutable $startDate,
+        \DateTimeImmutable $endDate,
     ) {
         if ($startDate >= $endDate) {
             throw new \InvalidArgumentException('Start date must be before end date');
         }
 
-        $this->client    = $client;
-        $this->name      = $name;
-        $this->amount    = $amount;
-        $this->rate      = $rate;
+        $this->client = $client;
+        $this->name = $name;
+        $this->amount = $amount;
+        $this->rate = $rate;
         $this->startDate = $startDate;
-        $this->endDate   = $endDate;
+        $this->endDate = $endDate;
     }
 
     public function getId(): ?int

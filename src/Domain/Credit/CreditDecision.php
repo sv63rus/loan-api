@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Credit;
@@ -6,13 +7,19 @@ namespace App\Domain\Credit;
 final class CreditDecision
 {
     private bool $approved;
-    /** @var string[] */
+
+    /**
+     * @var string[]
+     */
     private array $reasons;
 
+    /**
+     * @param array<mixed> $reasons
+     */
     private function __construct(bool $approved, array $reasons = [])
     {
         $this->approved = $approved;
-        $this->reasons  = $reasons;
+        $this->reasons = $reasons;
     }
 
     public static function approved(): self
@@ -30,7 +37,9 @@ final class CreditDecision
         return $this->approved;
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public function reasons(): array
     {
         return $this->reasons;

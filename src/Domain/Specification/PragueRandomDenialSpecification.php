@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Specification;
@@ -10,10 +11,10 @@ final class PragueRandomDenialSpecification implements SpecificationInterface
 {
     public function isSatisfiedBy(Client $candidate): bool
     {
-        if ($candidate->region() !== Region::PR) {
+        if (Region::PR !== $candidate->region()) {
             return true;
         }
 
-        return random_int(0, 1) === 0;
+        return 0 === random_int(0, 1);
     }
 }

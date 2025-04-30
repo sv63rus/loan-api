@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Service;
@@ -8,9 +9,14 @@ use App\Domain\Specification\SpecificationInterface;
 
 final class CreditEligibilityService
 {
-    /** @var iterable<SpecificationInterface> */
+    /**
+     * @var iterable<SpecificationInterface>
+     */
     private iterable $rules;
 
+    /**
+     * @param iterable<SpecificationInterface> $rules
+     */
     public function __construct(iterable $rules)
     {
         $this->rules = $rules;

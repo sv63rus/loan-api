@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Handler;
@@ -25,6 +26,9 @@ final readonly class CheckCreditHandler
         private EntityManagerInterface    $em
     ) {}
 
+    /**
+     * @return array<mixed>
+     */
     public function __invoke(CheckCreditCommand $command): array
     {
         $entity = $this->clients->find($command->clientId);
@@ -45,16 +49,18 @@ final readonly class CheckCreditHandler
         );
 
         $eligible = $this->eligibility->isEligible($domainClient);
-        $reason   = $eligible ? null : 'Eligibility rules failed';
+        $reason = $eligible ? null : 'Eligibility rules failed';
 
         $app = $this->loanApplicationRepository
-            ->findOneBy(['client' => $entity]);
+            ->findOneBy([
+                'client' => $entity,
+            ]);
 
         if ($app) {
             return [
                 'applicationId' => $app->getId(),
                 'eligible' => $app->isEligible(),
-                'reason'   => $app->getRejectionReason(),
+                'reason' => $app->getRejectionReason(),
             ];
         }
 

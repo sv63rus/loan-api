@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: App\Repository\LoanApplicationRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Repository\LoanApplicationRepository::class)]
 #[ORM\Table(name: 'loan_applications')]
 class LoanApplication
 {
@@ -26,10 +26,10 @@ class LoanApplication
     private float $rate;
 
     #[ORM\Column(type: 'date_immutable')]
-    private DateTimeImmutable $startDate;
+    private \DateTimeImmutable $startDate;
 
     #[ORM\Column(type: 'date_immutable')]
-    private DateTimeImmutable $endDate;
+    private \DateTimeImmutable $endDate;
 
     #[ORM\Column(type: 'boolean')]
     private bool $eligible;
@@ -44,21 +44,21 @@ class LoanApplication
         Client $client,
         int $amount,
         float $rate,
-        DateTimeImmutable $startDate,
-        DateTimeImmutable $endDate,
+        \DateTimeImmutable $startDate,
+        \DateTimeImmutable $endDate,
         bool $eligible,
-        ?string $rejectionReason = null
+        ?string $rejectionReason = null,
     ) {
         if ($startDate >= $endDate) {
             throw new \InvalidArgumentException('Start date must be before end date');
         }
 
-        $this->client          = $client;
-        $this->amount          = $amount;
-        $this->rate            = $rate;
-        $this->startDate       = $startDate;
-        $this->endDate         = $endDate;
-        $this->eligible        = $eligible;
+        $this->client = $client;
+        $this->amount = $amount;
+        $this->rate = $rate;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->eligible = $eligible;
         $this->rejectionReason = $rejectionReason;
     }
 
@@ -82,12 +82,12 @@ class LoanApplication
         return $this->rate;
     }
 
-    public function getStartDate(): DateTimeImmutable
+    public function getStartDate(): \DateTimeImmutable
     {
         return $this->startDate;
     }
 
-    public function getEndDate(): DateTimeImmutable
+    public function getEndDate(): \DateTimeImmutable
     {
         return $this->endDate;
     }

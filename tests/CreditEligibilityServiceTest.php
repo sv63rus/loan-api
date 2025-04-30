@@ -1,21 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests;
 
-use PHPUnit\Framework\TestCase;
-use App\Domain\Service\CreditEligibilityService;
-use App\Domain\Specification\ScoreSpecification;
-use App\Domain\Specification\IncomeSpecification;
-use App\Domain\Specification\AgeSpecification;
-use App\Domain\Specification\RegionSpecification;
-use App\Domain\Specification\SpecificationInterface;
 use App\Domain\Client\Client as DomainClient;
 use App\Domain\Client\ValueObject\Age;
 use App\Domain\Client\ValueObject\Income;
-use App\Domain\Client\ValueObject\Score;
-use App\Domain\Client\ValueObject\Region;
 use App\Domain\Client\ValueObject\Pin;
+use App\Domain\Client\ValueObject\Region;
+use App\Domain\Client\ValueObject\Score;
+use App\Domain\Service\CreditEligibilityService;
+use App\Domain\Specification\AgeSpecification;
+use App\Domain\Specification\IncomeSpecification;
+use App\Domain\Specification\RegionSpecification;
+use App\Domain\Specification\ScoreSpecification;
+use App\Domain\Specification\SpecificationInterface;
+use PHPUnit\Framework\TestCase;
 
 final class CreditEligibilityServiceTest extends TestCase
 {
@@ -28,7 +29,7 @@ final class CreditEligibilityServiceTest extends TestCase
             new IncomeSpecification(1000),
             new AgeSpecification(18, 60),
             new RegionSpecification([Region::PR, Region::BR, Region::OS]),
-            new class implements SpecificationInterface {
+            new class () implements SpecificationInterface {
                 public function isSatisfiedBy(mixed $candidate): bool
                 {
                     return true;
@@ -166,16 +167,26 @@ final class CreditEligibilityServiceTest extends TestCase
         );
 
         $specs = [
-        new ScoreSpecification(500),
-        new IncomeSpecification(1000),
-        new AgeSpecification(18, 60),
-        new class implements SpecificationInterface { public function isSatisfiedBy(mixed $c): bool { return false; } },
-        new class implements SpecificationInterface { public function isSatisfiedBy(mixed $c): bool { return true; } },
-    ];
+            new ScoreSpecification(500),
+            new IncomeSpecification(1000),
+            new AgeSpecification(18, 60),
+            new class () implements SpecificationInterface {
+                public function isSatisfiedBy(mixed $c): bool
+                {
+                    return false;
+                }
+            },
+            new class () implements SpecificationInterface {
+                public function isSatisfiedBy(mixed $c): bool
+                {
+                    return true;
+                }
+            },
+        ];
         $service = new CreditEligibilityService($specs);
 
         $this->assertFalse(
-        $service->isEligible($other),
+            $service->isEligible($other),
             'Client from disallowed region should be ineligible'
         );
     }

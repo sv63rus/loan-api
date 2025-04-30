@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Handler;
@@ -24,7 +25,7 @@ final readonly class IssueCreditHandler
     public function __invoke(IssueCreditCommand $command): int
     {
         $result = ($this->checkHandler)(new CheckCreditCommand($command->clientId));
-        $app    = $this->apps->find($result['applicationId']);
+        $app = $this->apps->find($result['applicationId']);
 
         if (! $app) {
             throw new \DomainException('Application not found');
@@ -60,6 +61,6 @@ final readonly class IssueCreditHandler
             $command->amount
         );
 
-        return $loan->getId();
+        return (int) $loan->getId();
     }
 }

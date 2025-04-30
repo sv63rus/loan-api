@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Api;
@@ -19,8 +20,9 @@ final class CreditController extends AbstractController
 {
     public function __construct(
         private readonly CheckCreditHandler $checkHandler,
-        private readonly IssueCreditHandler $issueHandler
-    ) {}
+        private readonly IssueCreditHandler $issueHandler,
+    ) {
+    }
 
     #[Route('/check', name: 'api_credit_check', methods: ['POST'])]
     #[OA\Post(
@@ -44,7 +46,7 @@ final class CreditController extends AbstractController
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Клиент не найден')
+            new OA\Response(response: 404, description: 'Клиент не найден'),
         ]
     )]
     public function check(Request $request): Response
@@ -52,20 +54,27 @@ final class CreditController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            return $this->json(['error' => 'Invalid JSON'], 400);
-
+            return $this->json([
+                'error' => 'Invalid JSON',
+            ], 400);
         }
-        if (!is_array($data) || !isset($data['clientId'])) {
-            return $this->json(['error' => 'clientId is required'], 400);
+        if (! is_array($data) || ! isset($data['clientId'])) {
+            return $this->json([
+                'error' => 'clientId is required',
+            ], 400);
         }
 
         try {
-            $eligible = ($this->checkHandler)(new CheckCreditCommand((int)$data['clientId']));
+            $eligible = ($this->checkHandler)(new CheckCreditCommand((int) $data['clientId']));
         } catch (\DomainException $e) {
-            return $this->json(['error' => $e->getMessage()], 404);
+            return $this->json([
+                'error' => $e->getMessage(),
+            ], 404);
         }
 
-        return $this->json(['eligible' => $eligible], 200);
+        return $this->json([
+            'eligible' => $eligible,
+        ], 200);
     }
 
     #[Route('/issue', name: 'api_credit_issue', methods: ['POST'])]
@@ -74,7 +83,7 @@ final class CreditController extends AbstractController
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['clientId','loanName','amount','rate','startDate','endDate'],
+                required: ['clientId', 'loanName', 'amount', 'rate', 'startDate', 'endDate'],
                 properties: [
                     new OA\Property(property: 'clientId', type: 'integer', example: 1),
                     new OA\Property(property: 'loanName', type: 'string', example: 'Personal Loan'),
@@ -92,13 +101,13 @@ final class CreditController extends AbstractController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'loanId', type: 'integer', example: 42),
-                        new OA\Property(property: 'message', type: 'string', example: 'Credit issued')
+                        new OA\Property(property: 'message', type: 'string', example: 'Credit issued'),
                     ]
                 )
             ),
             new OA\Response(response: 400, description: 'Неправильные данные'),
             new OA\Response(response: 404, description: 'Клиент не найден'),
-            new OA\Response(response: 422, description: 'Клиент не прошёл проверку')
+            new OA\Response(response: 422, description: 'Клиент не прошёл проверку'),
         ]
     )]
     public function issue(Request $request): Response
@@ -106,25 +115,34 @@ final class CreditController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $required = ['clientId', 'loanName', 'amount', 'rate', 'startDate', 'endDate'];
-            if (!is_array($data) || count(array_diff($required, array_keys($data))) > 0) {
-                return $this->json(['error' => 'Missing fields'], 400);
+            if (! is_array($data) || count(array_diff($required, array_keys($data))) > 0) {
+                return $this->json([
+                    'error' => 'Missing fields',
+                ], 400);
             }
 
             $command = new IssueCreditCommand(
-                (int)$data['clientId'],
+                (int) $data['clientId'],
                 $data['loanName'],
-                (int)$data['amount'],
-                (float)$data['rate'],
+                (int) $data['amount'],
+                (float) $data['rate'],
                 new \DateTimeImmutable($data['startDate']),
                 new \DateTimeImmutable($data['endDate'])
             );
             $loanId = ($this->issueHandler)($command);
         } catch (\DomainException $e) {
-            return $this->json(['error' => $e->getMessage()], $e->getMessage() === 'Client not found' ? 404 : 422);
+            return $this->json([
+                'error' => $e->getMessage(),
+            ], 'Client not found' === $e->getMessage() ? 404 : 422);
         } catch (\Exception $e) {
-            return $this->json(['error' => 'Invalid data'], 400);
+            return $this->json([
+                'error' => 'Invalid data',
+            ], 400);
         }
 
-        return $this->json(['loanId' => $loanId, 'message' => 'Credit issued'], 201);
+        return $this->json([
+            'loanId' => $loanId,
+            'message' => 'Credit issued',
+        ], 201);
     }
 }

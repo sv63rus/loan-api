@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Notification;
@@ -8,7 +9,7 @@ use Psr\Log\LoggerInterface;
 final readonly class LoggerCreditNotifier
 {
     public function __construct(
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

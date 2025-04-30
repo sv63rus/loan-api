@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ClientRepository;
@@ -43,21 +45,18 @@ class Client
      * @var Collection<int, Loan>
      */
     #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'client', orphanRemoval: true)]
-    private Collection $loans;
+    private Collection $loans; // @phpstan-ignore property.onlyRead
 
-    /**
-     * @param string|null $name
-     * @param int|null $age
-     * @param string|null $region
-     * @param string|null $pin
-     * @param int|null $score
-     * @param int|null $income
-     * @param string|null $email
-     * @param string|null $phone
-     * @param Collection $loans
-     */
-    public function __construct(?string $name, ?int $age, ?string $region, ?string $pin, ?int $score, ?int $income, ?string $email, ?string $phone)
-    {
+    public function __construct(
+        ?string $name,
+        ?int $age,
+        ?string $region,
+        ?string $pin,
+        ?int $score,
+        ?int $income,
+        ?string $email,
+        ?string $phone,
+    ) {
         $this->name = $name;
         $this->age = $age;
         $this->region = $region;
@@ -67,7 +66,6 @@ class Client
         $this->email = $email;
         $this->phone = $phone;
     }
-
 
     public function getId(): ?int
     {
@@ -133,6 +131,7 @@ class Client
 
         return $this;
     }
+
     public function getIncome(): ?int
     {
         return $this->income;
@@ -179,7 +178,7 @@ class Client
 
     public function addLoan(Loan $loan): static
     {
-        if (!$this->loans->contains($loan)) {
+        if (! $this->loans->contains($loan)) {
             $this->loans->add($loan);
             $loan->setClient($this);
         }

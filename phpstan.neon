@@ -1,0 +1,15 @@
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - vendor/phpstan/phpstan-doctrine/extension.neon
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    doctrine:
+        allowNullablePropertyForRequiredField: true
+    excludePaths:
+        - vendor/(?)

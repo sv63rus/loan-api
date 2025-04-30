@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Handler;
@@ -10,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final readonly class CreateClientHandler
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -30,6 +31,6 @@ final readonly class CreateClientHandler
         $this->entityManager->persist($client);
         $this->entityManager->flush();
 
-        return $client->getId();
+        return (int) $client->getId();
     }
 }

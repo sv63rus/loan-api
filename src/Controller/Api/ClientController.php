@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Api;
@@ -15,7 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[OA\Tag(name: 'Clients')]
 final class ClientController extends AbstractController
 {
-    public function __construct(private readonly CreateClientHandler $handler) {}
+    public function __construct(
+        private readonly CreateClientHandler $handler
+    )
+    {
+    }
 
     #[Route('', name: 'api_create_client', methods: ['POST'])]
     #[OA\Post(
@@ -24,16 +29,21 @@ final class ClientController extends AbstractController
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['name','age','region','income','score','pin','email','phone'],
+                required: ['name', 'age', 'region', 'income', 'score', 'pin', 'email', 'phone'],
                 properties: [
-                    new OA\Property(property: 'name',   type: 'string', example: 'Petr Pavel'),
-                    new OA\Property(property: 'age',    type: 'integer', example: 35),
+                    new OA\Property(property: 'name', type: 'string', example: 'Petr Pavel'),
+                    new OA\Property(property: 'age', type: 'integer', example: 35),
                     new OA\Property(property: 'region', type: 'string', example: 'PR'),
                     new OA\Property(property: 'income', type: 'integer', example: 1500),
-                    new OA\Property(property: 'score',  type: 'integer', example: 600),
-                    new OA\Property(property: 'pin',    type: 'string',  example: '123-45-6789'),
-                    new OA\Property(property: 'email',  type: 'string',  format: 'email', example: 'petr.pavel@example.com'),
-                    new OA\Property(property: 'phone',  type: 'string',  example: '+420123456789'),
+                    new OA\Property(property: 'score', type: 'integer', example: 600),
+                    new OA\Property(property: 'pin', type: 'string', example: '123-45-6789'),
+                    new OA\Property(
+                        property: 'email',
+                        type: 'string',
+                        format: 'email',
+                        example: 'petr.pavel@example.com'
+                    ),
+                    new OA\Property(property: 'phone', type: 'string', example: '+420123456789'),
                 ]
             )
         ),
@@ -55,25 +65,30 @@ final class ClientController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
-            return $this->json(['error' => 'Invalid JSON'], 400);
-
+            return $this->json([
+                'error' => 'Invalid JSON',
+            ], 400);
         }
-        if (!is_array($data)) {
-            return $this->json(['error' => 'Invalid JSON'], 400);
+        if (! is_array($data)) {
+            return $this->json([
+                'error' => 'Invalid JSON',
+            ], 400);
         }
 
-        foreach (['name','age','region','income','score','pin','email','phone'] as $field) {
+        foreach (['name', 'age', 'region', 'income', 'score', 'pin', 'email', 'phone'] as $field) {
             if (empty($data[$field])) {
-                return $this->json(['error' => "Missing field $field"], 400);
+                return $this->json([
+                    'error' => "Missing field $field",
+                ], 400);
             }
         }
 
         $command = new CreateClientCommand(
             $data['name'],
-            (int)$data['age'],
+            (int) $data['age'],
             $data['region'],
-            (int)$data['income'],
-            (int)$data['score'],
+            (int) $data['income'],
+            (int) $data['score'],
             $data['pin'],
             $data['email'],
             $data['phone']
@@ -81,6 +96,8 @@ final class ClientController extends AbstractController
 
         $id = ($this->handler)($command);
 
-        return $this->json(['id' => $id], 201);
+        return $this->json([
+            'id' => $id,
+        ], 201);
     }
 }

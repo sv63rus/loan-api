@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Specification;
@@ -18,7 +19,7 @@ final class OstravaRateAdjustmentSpecification implements SpecificationInterface
 
     public function isSatisfiedBy(Client $candidate): bool
     {
-        return $candidate->region() === Region::OS;
+        return Region::OS === $candidate->region();
     }
 
     public function adjust(Credit $credit): void

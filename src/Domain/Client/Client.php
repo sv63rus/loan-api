@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Client;
@@ -12,13 +13,21 @@ use App\Domain\Client\ValueObject\Score;
 final class Client
 {
     private string $id;
+
     private string $name;
+
     private Age $age;
+
     private Region $region;
+
     private Income $income;
+
     private Score $score;
+
     private Pin $pin;
+
     private string $email;
+
     private string $phone;
 
     public function __construct(
@@ -30,17 +39,17 @@ final class Client
         Score $score,
         Pin $pin,
         string $email,
-        string $phone
+        string $phone,
     ) {
-        $this->id     = $id;
-        $this->name   = $name;
-        $this->age    = $age;
+        $this->id = $id;
+        $this->name = $name;
+        $this->age = $age;
         $this->region = $region;
         $this->income = $income;
-        $this->score  = $score;
-        $this->pin    = $pin;
-        $this->email  = $email;
-        $this->phone  = $phone;
+        $this->score = $score;
+        $this->pin = $pin;
+        $this->email = $email;
+        $this->phone = $phone;
     }
 
     public function id(): string
