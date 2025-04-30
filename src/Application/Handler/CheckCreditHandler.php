@@ -24,7 +24,8 @@ final readonly class CheckCreditHandler
         private ClientRepository          $clients,
         private CreditEligibilityService  $eligibility,
         private EntityManagerInterface    $em
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<mixed>

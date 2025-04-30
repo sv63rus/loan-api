@@ -17,9 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ClientController extends AbstractController
 {
     public function __construct(
-        private readonly CreateClientHandler $handler
-    )
-    {
+        private readonly CreateClientHandler $handler,
+    ) {
     }
 
     #[Route('', name: 'api_create_client', methods: ['POST'])]
