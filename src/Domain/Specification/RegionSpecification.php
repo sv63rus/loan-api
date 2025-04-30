@@ -24,6 +24,6 @@ final class RegionSpecification implements SpecificationInterface
 
     public function isSatisfiedBy(Client $candidate): bool
     {
-        return in_array($candidate->region(), $this->allowed, true);
+        return in_array($candidate->region()->value, $this->allowed, true);
     }
 }
